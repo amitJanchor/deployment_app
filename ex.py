@@ -1,6 +1,6 @@
 import streamlit as st
 st.code("pip install PyPDF2")
-from PyPDF2 import PdfReader
+import PyPDF2
 from io import BytesIO
 
 st.write('Hello World')
@@ -9,7 +9,7 @@ file_type = st.text_input('Choose source type [ pdf , audio ]')
 if file_type == 'pdf':
 	uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 	if uploaded_file is not None:
-		reader = PdfReader(uploaded_file)
+		reader = PyPDF2.PdfReader(uploaded_file)
 		page_wise = []
 		full_text = ''
 				
