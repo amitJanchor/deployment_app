@@ -3,7 +3,7 @@ import PyPDF2
 from io import BytesIO
 
 st.write('Hello World')
-# file_type = st.text_input('Choose source type [ pdf , audio ]')
+file_type = st.text_input('Choose source type [ pdf , audio ]')
 
 # if file_type == 'pdf':
 # 	uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
