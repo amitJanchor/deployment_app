@@ -1,5 +1,4 @@
 import streamlit as st
-import pdfplumber
 import PyPDF2
 from io import BytesIO
 
