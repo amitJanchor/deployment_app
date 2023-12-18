@@ -4,9 +4,9 @@ from io import BytesIO
 
 st.write('Hello World')
 file_type = st.text_input('Choose source type [ pdf , audio ]')
+uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 
 if file_type == 'pdf':
-	uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 	if uploaded_file is not None:
 		reader = PyPDF2.PdfReader(uploaded_file)
 		page_wise = []
