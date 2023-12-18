@@ -2,8 +2,9 @@ import streamlit as st
 import PyPDF2
 from io import BytesIO
 
-st.write('Hello World')
+st.write('Hello User!')
 file_type = st.text_input('Choose source type [ pdf , audio ]')
+max_len = int(st.text_input('Chunk size:'))
 uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 full_text = ''
 
@@ -18,5 +19,5 @@ if file_type == 'pdf':
 			page_wise.append(t.strip())	
 			full_text = full_text + "\n" + t
 
-st.write(full_text)
+Transcript_final = full_text
     
