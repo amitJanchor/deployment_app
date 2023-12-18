@@ -1,5 +1,5 @@
 import streamlit as st
-st.code("!pip install PyPDF2")
+st.code("pip install PyPDF2")
 import PyPDF2
 from io import BytesIO
 
