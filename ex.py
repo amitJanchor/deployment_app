@@ -21,4 +21,14 @@ if file_type == 'pdf':
 			full_text = full_text + "\n" + t
 
 Transcript_final = full_text
-    
+
+t_list = []
+
+words_per_segment = max_len
+words = Transcript_final.split()
+
+for i in range(0, len(words), words_per_segment):
+    segment = " ".join(words[i:i + words_per_segment])
+    t_list.append(segment)
+
+st.write(t_list[0])
