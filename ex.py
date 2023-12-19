@@ -11,6 +11,8 @@ if max_len_str:
 uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 full_text = ''
 
+st.write(st.secrets["openai_key"])
+
 if file_type == 'pdf':
 	if uploaded_file is not None:
 		reader = PyPDF2.PdfReader(uploaded_file)
