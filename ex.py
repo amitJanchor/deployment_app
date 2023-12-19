@@ -58,7 +58,7 @@ def Note_maker(t_list, api_key):
 	    })
 	    
 	    response = client.chat.completions.create(
-	      model="gpt-4-1106-preview",
+	      model="gpt-4",
 	      messages=message_list,
 	      temperature=1.5,
 	      max_tokens=4096,
