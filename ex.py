@@ -66,28 +66,28 @@ def Note_maker(model_option, t_list, api_key):
 		        except:
 		                pass
 		
-	message_list.append({
-	      "role": "assistant",
-	      "content": response.choices[0].message.content
-	    })
+		message_list.append({
+		      "role": "assistant",
+		      "content": response.choices[0].message.content
+		    })
 	    
-	    stock = "This is continuation of the transcript.\nGenerate call notes pointwise for an investment firm under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
-	    cont = stock + t_list[i]
+	        stock = "This is continuation of the transcript.\nGenerate call notes pointwise for an investment firm under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+	        cont = stock + t_list[i]
 	    
-	    message_list.append({
-	      "role": "user",
-	      "content": cont
-	    })
+	        message_list.append({
+		      "role": "user",
+		      "content": cont
+		    })
 	    
-	    response = client.chat.completions.create(
-	      model=model_option,
-	      messages=message_list,
-	      temperature=1.5,
-	      max_tokens=4096,
-	      top_p=0.6,
-	      frequency_penalty=0,
-	      presence_penalty=0
-	    )
+	        response = client.chat.completions.create(
+				      model=model_option,
+				      messages=message_list,
+				      temperature=1.5,
+				      max_tokens=4096,
+				      top_p=0.6,
+				      frequency_penalty=0,
+				      presence_penalty=0
+				    )
 	    
 	Notes.append(response.choices[0].message.content)
 
