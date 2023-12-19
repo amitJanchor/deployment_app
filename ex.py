@@ -99,6 +99,5 @@ if file_type == 'pdf':
 		    t_list.append(segment)
 
 		Notes_final_ans = Note_maker(t_list, st.secrets["openai_key"])
-		
-		st.write(Notes_final_ans)
 
+		st.download_button('Download Call Notes', Notes_final_ans)
