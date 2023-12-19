@@ -32,6 +32,7 @@ if file_type == 'pdf':
 		for i in range(0, len(words), words_per_segment):
 		    segment = " ".join(words[i:i + words_per_segment])
 		    t_list.append(segment)
-		
+
+
 		
 
