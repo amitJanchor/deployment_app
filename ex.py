@@ -4,11 +4,13 @@ from io import BytesIO
 import openai
 
 st.write('Hello User!')
-file_type = st.text_input('Choose source type [ pdf , audio ]')
+file_type = st.text_input('Choose source type [ pdf , audio ]:')
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
 	max_len = int(max_len_str)
-uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
+uploaded_file = st.file_uploader("Choose a PDF file:", type="pdf")
+file_title = st.text_input('File title:')
+
 full_text = ''
 
 
@@ -40,7 +42,7 @@ def Note_maker(t_list, api_key):
 	
 	for i in range(1,len(t_list)):
 		
-	    st.write(i,'/',len(t_list),'\n')
+	    st.write(i,'/',len(t_list)-1,'\n')
 		
 	    Notes.append(response.choices[0].message.content)
 	    
@@ -100,4 +102,4 @@ if file_type == 'pdf':
 
 		Notes_final_ans = Note_maker(t_list, st.secrets["openai_key"])
 
-		st.download_button('Download Call Notes', Notes_final_ans)
+		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_title)
