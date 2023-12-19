@@ -23,6 +23,7 @@ full_text = ''
 
 def Note_maker(model_option, t_list, api_key):
 	client = openai.OpenAI(api_key=api_key)
+	st.write('Progress update:','\n')
 	st.write(1,'/',len(t_list),'\n')
 	message_list = [
 	    {
@@ -82,7 +83,8 @@ def Note_maker(model_option, t_list, api_key):
 
 	for i in Notes:
 	    Notes_Final = Notes_Final + i + '\n\n'
-	
+
+	st.write('Process done!','\n')
 	return Notes_Final
 
 if file_type == 'pdf':
