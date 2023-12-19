@@ -136,6 +136,7 @@ if file_type == 'audio':
 		chunk_length_ms = 60000
 		num_chunks = total_duration // chunk_length_ms
 
+		client = openai.OpenAI(api_key=st.secrets["openai_key"])
 		for i in range(num_chunks):
 			st.write(i+1,'/',num_chunks,'\n')
 			start_time = i * chunk_length_ms
