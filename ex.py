@@ -66,7 +66,7 @@ def Note_maker(model_option, t_list, api_key):
 		        except:
 		                pass
 		
-	    message_list.append({
+	message_list.append({
 	      "role": "assistant",
 	      "content": response.choices[0].message.content
 	    })
