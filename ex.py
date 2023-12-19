@@ -129,30 +129,30 @@ if file_type == 'pdf':
 
 string_transcript_audio=''
 
-if file_type == 'audio':
-	if uploaded_file is not None:
-		audio = AudioSegment.from_file(uploaded_file)
-		total_duration = len(audio)
-		chunk_length_ms = 60000
-		num_chunks = total_duration // chunk_length_ms
+# if file_type == 'audio':
+# 	if uploaded_file is not None:
+# 		audio = AudioSegment.from_file(uploaded_file)
+# 		total_duration = len(audio)
+# 		chunk_length_ms = 60000
+# 		num_chunks = total_duration // chunk_length_ms
 
-		for i in range(num_chunks):
-			st.write(i+1,'/',num_chunks,'\n')
-			start_time = i * chunk_length_ms
-			end_time = (i + 1) * chunk_length_ms
+# 		for i in range(num_chunks):
+# 			st.write(i+1,'/',num_chunks,'\n')
+# 			start_time = i * chunk_length_ms
+# 			end_time = (i + 1) * chunk_length_ms
 
-			if end_time > total_duration:
-				end_time = total_duration
+# 			if end_time > total_duration:
+# 				end_time = total_duration
 
-			chunk = audio[start_time:end_time]
-			chunk.export(str(i)+".mp3", format="mp3")
+# 			chunk = audio[start_time:end_time]
+# 			chunk.export(str(i)+".mp3", format="mp3")
 
-			with open(str(i)+".mp3",'rb') as audio_file:
-				transcript = client.audio.transcriptions.create(
-						  model="whisper-1", 
-						  file=audio_file, 
-						  response_format="text"
-						)
-				string_transcript_audio = string_transcript_audio + transcript + ' '
+# 			with open(str(i)+".mp3",'rb') as audio_file:
+# 				transcript = client.audio.transcriptions.create(
+# 						  model="whisper-1", 
+# 						  file=audio_file, 
+# 						  response_format="text"
+# 						)
+# 				string_transcript_audio = string_transcript_audio + transcript + ' '
 
-		st.write(string_transcript_audio)
+# 		st.write(string_transcript_audio)
