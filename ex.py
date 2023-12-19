@@ -31,5 +31,5 @@ if file_type == 'pdf':
 		    segment = " ".join(words[i:i + words_per_segment])
 		    t_list.append(segment)
 		
-		st.write(t_list[0])
+		
 
