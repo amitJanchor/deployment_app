@@ -127,5 +127,5 @@ if file_type == 'pdf':
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)
 
-if file_type == 'audio': 
+#if file_type == 'audio': 
 	
