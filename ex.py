@@ -1,6 +1,7 @@
 import streamlit as st
 import PyPDF2
 from io import BytesIO
+import openai
 
 st.write('Hello User!')
 file_type = st.text_input('Choose source type [ pdf , audio ]')
