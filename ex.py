@@ -10,13 +10,18 @@ if max_len_str:
 	max_len = int(max_len_str)
 
 file_title = st.text_input('File title:')
+
+model_option = st.selectbox(
+    'Which model would you like to use?',
+    ('gpt-4-1106-preview', 'gpt-3.5-turbo-1106'))
+
 uploaded_file = st.file_uploader("Choose a PDF file:", type="pdf")
 
 
 full_text = ''
 
 
-def Note_maker(t_list, api_key):
+def Note_maker(model_option, t_list, api_key):
 	client = openai.OpenAI(api_key=api_key)
 	
 	message_list = [
@@ -31,7 +36,7 @@ def Note_maker(t_list, api_key):
 	  ]
 	
 	response = client.chat.completions.create(
-	  model="gpt-4-1106-preview",
+	  model=model_option,
 	  messages=message_list,
 	  temperature=1.5,
 	  max_tokens=4096,
@@ -62,7 +67,7 @@ def Note_maker(t_list, api_key):
 	    })
 	    
 	    response = client.chat.completions.create(
-	      model="gpt-4",
+	      model=model_option,
 	      messages=message_list,
 	      temperature=1.5,
 	      max_tokens=4096,
@@ -102,6 +107,7 @@ if file_type == 'pdf':
 		    segment = " ".join(words[i:i + words_per_segment])
 		    t_list.append(segment)
 
-		Notes_final_ans = Note_maker(t_list, st.secrets["openai_key"])
+		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
+		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_title)
