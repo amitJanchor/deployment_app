@@ -2,6 +2,7 @@ import streamlit as st
 import PyPDF2
 from io import BytesIO
 import openai
+import pydub
 
 st.write('Hello User!')
 file_type = st.text_input('Choose source type [ pdf , audio ]:')
@@ -126,4 +127,5 @@ if file_type == 'pdf':
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)
 
-#if file_type == 'audio': 
+if file_type == 'audio': 
+	
