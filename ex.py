@@ -6,7 +6,8 @@ import openai
 st.write('Hello User!')
 file_type = st.text_input('Choose source type [ pdf , audio ]')
 max_len_str = st.text_input('Chunk size:')
-max_len = int(max_len_str)
+if max_len_str:
+	max_len = int(max_len_str)
 uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 full_text = ''
 
