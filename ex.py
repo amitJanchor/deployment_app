@@ -50,51 +50,51 @@ def Note_maker(model_option, t_list, api_key):
 	
 	for i in range(1,len(t_list)):
 		
-	        st.write(i+1,'/',len(t_list),'\n')
+		st.write(i+1,'/',len(t_list),'\n')
 		
-	        Notes.append(response.choices[0].message.content)
+		Notes.append(response.choices[0].message.content)
 
-	        if (model_option=='gpt-3.5-turbo-1106'):
-		        try:
-		                del message_list[2:4]
-		        except:
-		                pass
-	        elif (model_option=='gpt-4-1106-preview'):
-		        try:
-		                if len(message_list)>=8:	
-			                del message_list[2:4]
-		        except:
-		                pass
+		if (model_option=='gpt-3.5-turbo-1106'):
+			try:
+				del message_list[2:4]
+			except:
+				pass
+		elif (model_option=='gpt-4-1106-preview'):
+			try:
+				if len(message_list)>=8:
+					del message_list[2:4]
+			except:
+				pass
 		
 		message_list.append({
 		      "role": "assistant",
 		      "content": response.choices[0].message.content
 		    })
 	    
-	        stock = "This is continuation of the transcript.\nGenerate call notes pointwise for an investment firm under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
-	        cont = stock + t_list[i]
+		stock = "This is continuation of the transcript.\nGenerate call notes pointwise for an investment firm under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+		cont = stock + t_list[i]
 	    
-	        message_list.append({
+		message_list.append({
 		      "role": "user",
 		      "content": cont
 		    })
 	    
-	        response = client.chat.completions.create(
-				      model=model_option,
-				      messages=message_list,
-				      temperature=1.5,
-				      max_tokens=4096,
-				      top_p=0.6,
-				      frequency_penalty=0,
-				      presence_penalty=0
-				    )
+		response = client.chat.completions.create(
+		      model=model_option,
+		      messages=message_list,
+		      temperature=1.5,
+		      max_tokens=4096,
+		      top_p=0.6,
+		      frequency_penalty=0,
+		      presence_penalty=0
+		    )
 	    
 	Notes.append(response.choices[0].message.content)
 
 	Notes_Final = ''
 
 	for i in Notes:
-	        Notes_Final = Notes_Final + i + '\n\n'
+		Notes_Final = Notes_Final + i + '\n\n'
 
 	st.write('Process done!','\n')
 	return Notes_Final
@@ -118,8 +118,8 @@ if file_type == 'pdf':
 		words = Transcript_final.split()
 		
 		for i in range(0, len(words), words_per_segment):
-		        segment = " ".join(words[i:i + words_per_segment])
-		        t_list.append(segment)
+			segment = " ".join(words[i:i + words_per_segment])
+			t_list.append(segment)
 
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
