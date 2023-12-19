@@ -11,7 +11,70 @@ if max_len_str:
 uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
 full_text = ''
 
-st.write(st.secrets["openai_key"])
+
+def Note_maker(t_list, api_key):
+	client = openai.OpenAI(api_key=api_key)
+	
+	message_list = [
+	    {
+	      "role": "system",
+	      "content": "Generate detailed call notes of the conversation for an investment firm.\nGenerate notes pointwise under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+	    },
+	    {
+	      "role": "user",
+	      "content": t_list[0]
+	    }
+	  ]
+	
+	response = client.chat.completions.create(
+	  model="gpt-4-1106-preview",
+	  messages=message_list,
+	  temperature=1.5,
+	  max_tokens=4096,
+	  top_p=0.6,
+	  frequency_penalty=0,
+	  presence_penalty=0
+	)
+	
+	Notes = []
+	
+	for i in range(1,len(t_list)):
+		
+	    st.write(i,'/',len(t_list),'\n')
+		
+	    Notes.append(response.choices[0].message.content)
+	    
+	    message_list.append({
+	      "role": "assistant",
+	      "content": response.choices[0].message.content
+	    })
+	    
+	    stock = "This is continuation of the transcript.\nGenerate call notes pointwise for an investment firm under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+	    cont = stock + t_list[i]
+	    
+	    message_list.append({
+	      "role": "user",
+	      "content": cont
+	    })
+	    
+	    response = client.chat.completions.create(
+	      model="gpt-4-1106-preview",
+	      messages=message_list,
+	      temperature=1.5,
+	      max_tokens=4096,
+	      top_p=0.6,
+	      frequency_penalty=0,
+	      presence_penalty=0
+	    )
+	    
+	Notes.append(response.choices[0].message.content)
+
+	Notes_Final = ''
+
+	for i in Notes:
+	    Notes_Final = Notes_Final + i + '\n\n'
+	
+	return Notes_Final
 
 if file_type == 'pdf':
 	if uploaded_file is not None:
@@ -35,6 +98,7 @@ if file_type == 'pdf':
 		    segment = " ".join(words[i:i + words_per_segment])
 		    t_list.append(segment)
 
-
+		Notes_final_ans = Note_maker(t_list, st.secrets["openai_key"])
 		
+		st.write(Notes_final_ans)
 
