@@ -23,7 +23,7 @@ full_text = ''
 
 def Note_maker(model_option, t_list, api_key):
 	client = openai.OpenAI(api_key=api_key)
-	
+	st.write(1,'/',len(t_list),'\n')
 	message_list = [
 	    {
 	      "role": "system",
@@ -49,7 +49,7 @@ def Note_maker(model_option, t_list, api_key):
 	
 	for i in range(1,len(t_list)):
 		
-	    st.write(i,'/',len(t_list)-1,'\n')
+	    st.write(i+1,'/',len(t_list),'\n')
 		
 	    Notes.append(response.choices[0].message.content)
 	    
@@ -110,4 +110,4 @@ if file_type == 'pdf':
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
 		file_actual_name = file_title + '.txt'
-		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_title)
+		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)
