@@ -137,6 +137,7 @@ if file_type == 'audio':
 		num_chunks = total_duration // chunk_length_ms
 
 		client = openai.OpenAI(api_key=st.secrets["openai_key"])
+		st.write('[Transcription] Progress update:','\n')
 		for i in range(num_chunks):
 			st.write(i+1,'/',num_chunks,'\n')
 			start_time = i * chunk_length_ms
@@ -155,5 +156,19 @@ if file_type == 'audio':
 						  response_format="text"
 						)
 				string_transcript_audio = string_transcript_audio + transcript + ' '
+		st.write('Transcription Done!','\n')
+		Transcript_final = string_transcript_audio
 
-		st.write(string_transcript_audio)
+		t_list = []
+
+		words_per_segment = max_len
+		words = Transcript_final.split()
+		
+		for i in range(0, len(words), words_per_segment):
+			segment = " ".join(words[i:i + words_per_segment])
+			t_list.append(segment)
+
+		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+
+		file_actual_name = file_title + '.txt'
+		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)		
