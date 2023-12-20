@@ -134,8 +134,8 @@ if file_type == 'pdf':
 string_transcript_audio=''
 
 if file_type == 'audio':
-	if uploaded_file is not None:
-		audio = pydub.AudioSegment.from_file(uploaded_file)
+	if uploaded_file is not None and len(uploaded_file)!=0:
+		audio = pydub.AudioSegment.from_file(uploaded_file[0])
 		total_duration = len(audio)
 		chunk_length_ms = 60000
 		num_chunks = total_duration // chunk_length_ms
