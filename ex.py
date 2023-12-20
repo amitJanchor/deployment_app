@@ -5,7 +5,11 @@ import openai
 import pydub
 
 st.write('Hello User!')
-file_type = st.text_input('Choose source type [ pdf , audio ]:')
+
+file_type = st.selectbox(
+    'Choose source type [ pdf , audio ]:',
+    ('pdf', 'audio'))
+
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
 	max_len = int(max_len_str)
@@ -16,7 +20,7 @@ model_option = st.selectbox(
     'Which model would you like to use?',
     ('gpt-4-1106-preview', 'gpt-3.5-turbo-1106'))
 
-uploaded_file = st.file_uploader("Choose a PDF file:", type=["pdf","mp3","m4a","wav"])
+uploaded_file = st.file_uploader("Choose a PDF file:", type=["pdf","mp3","m4a","wav"], accept_multiple_files=True)
 
 
 full_text = ''
@@ -24,7 +28,7 @@ full_text = ''
 
 def Note_maker(model_option, t_list, api_key):
 	client = openai.OpenAI(api_key=api_key)
-	st.write('Progress update:','\n')
+	st.write('[Note Making] Progress update:','\n')
 	st.write(1,'/',len(t_list),'\n')
 	message_list = [
 	    {
