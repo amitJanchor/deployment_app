@@ -105,7 +105,7 @@ def Note_maker(model_option, t_list, api_key):
 	return Notes_Final
 
 if file_type == 'pdf':
-	if uploaded_file is not None:
+	if uploaded_file is not None and len(uploaded_file)!=0:
 		reader = PyPDF2.PdfReader(uploaded_file)
 		page_wise = []
 				
