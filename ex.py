@@ -16,7 +16,7 @@ model_option = st.selectbox(
     'Which model would you like to use?',
     ('gpt-4-1106-preview', 'gpt-3.5-turbo-1106'))
 
-uploaded_file = st.file_uploader("Choose a PDF file:", type=["pdf","mp3"])
+uploaded_file = st.file_uploader("Choose a PDF file:", type=["pdf","mp3","m4a","wav"])
 
 
 full_text = ''
