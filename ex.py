@@ -111,7 +111,7 @@ def Note_maker(model_option, t_list, api_key):
 	return Notes_Final
 
 def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
-	client = OpenAI(api_key=api_key)
+	client = openai.OpenAI(api_key=api_key)
 	st.write('[Custom Input Note Making] Progress update:','\n')
 	Notes = []
 	
