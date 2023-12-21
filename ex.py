@@ -182,7 +182,7 @@ string_transcript_audio=''
 if file_type == 'audio':
 	if uploaded_file is not None and len(uploaded_file)!=0:
 
-		audio_processor(uploaded_file[0], max_len, string_transcript_audio)
+		t_list = audio_processor(uploaded_file[0], max_len, string_transcript_audio)
 
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
