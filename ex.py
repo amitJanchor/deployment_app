@@ -176,6 +176,7 @@ if file_type == 'pdf':
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)
+		st.stop()
 
 string_transcript_audio=''
 
@@ -187,4 +188,5 @@ if file_type == 'audio':
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
 		file_actual_name = file_title + '.txt'
-		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)		
+		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)	
+		st.stop()
