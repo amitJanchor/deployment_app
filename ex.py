@@ -126,7 +126,47 @@ def pdf_processor(uploaded_file, max_len, full_text):
 		t_list.append(segment)
 
 	return t_list	
-			
+
+def audio_processor(uploaded_file, max_len, string_transcript_audio):
+	audio = pydub.AudioSegment.from_file(uploaded_file)
+	total_duration = len(audio)
+	chunk_length_ms = 60000
+	num_chunks = total_duration // chunk_length_ms
+	
+	client = openai.OpenAI(api_key=st.secrets["openai_key"])
+	st.write('[Transcription] Progress update:','\n')
+	for i in range(num_chunks):
+		st.write(i+1,'/',num_chunks,'\n')
+		start_time = i * chunk_length_ms
+		end_time = (i + 1) * chunk_length_ms
+	
+		if end_time > total_duration:
+			end_time = total_duration
+	
+		chunk = audio[start_time:end_time]
+		chunk.export(str(i)+".mp3", format="mp3")
+	
+		with open(str(i)+".mp3",'rb') as audio_file:
+			transcript = client.audio.transcriptions.create(
+					  model="whisper-1", 
+					  file=audio_file, 
+					  response_format="text"
+					)
+			string_transcript_audio = string_transcript_audio + transcript + ' '
+	st.write('Transcription Done!','\n')
+	Transcript_final = string_transcript_audio
+	
+	t_list = []
+	
+	words_per_segment = max_len
+	words = Transcript_final.split()
+	
+	for i in range(0, len(words), words_per_segment):
+		segment = " ".join(words[i:i + words_per_segment])
+		t_list.append(segment)
+
+	return t_list
+
 if file_type == 'pdf':
 	if uploaded_file is not None and len(uploaded_file)!=0:
 
@@ -141,42 +181,8 @@ string_transcript_audio=''
 
 if file_type == 'audio':
 	if uploaded_file is not None and len(uploaded_file)!=0:
-		audio = pydub.AudioSegment.from_file(uploaded_file[0])
-		total_duration = len(audio)
-		chunk_length_ms = 60000
-		num_chunks = total_duration // chunk_length_ms
 
-		client = openai.OpenAI(api_key=st.secrets["openai_key"])
-		st.write('[Transcription] Progress update:','\n')
-		for i in range(num_chunks):
-			st.write(i+1,'/',num_chunks,'\n')
-			start_time = i * chunk_length_ms
-			end_time = (i + 1) * chunk_length_ms
-
-			if end_time > total_duration:
-				end_time = total_duration
-
-			chunk = audio[start_time:end_time]
-			chunk.export(str(i)+".mp3", format="mp3")
-
-			with open(str(i)+".mp3",'rb') as audio_file:
-				transcript = client.audio.transcriptions.create(
-						  model="whisper-1", 
-						  file=audio_file, 
-						  response_format="text"
-						)
-				string_transcript_audio = string_transcript_audio + transcript + ' '
-		st.write('Transcription Done!','\n')
-		Transcript_final = string_transcript_audio
-
-		t_list = []
-
-		words_per_segment = max_len
-		words = Transcript_final.split()
-		
-		for i in range(0, len(words), words_per_segment):
-			segment = " ".join(words[i:i + words_per_segment])
-			t_list.append(segment)
+		audio_processor(uploaded_file[0], max_len, string_transcript_audio)
 
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
