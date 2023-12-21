@@ -104,27 +104,33 @@ def Note_maker(model_option, t_list, api_key):
 	st.write('Process done!','\n')
 	return Notes_Final
 
+def pdf_processor(uploaded_file, max_len):
+	for i in range(len(uploaded_file)):
+		reader = PyPDF2.PdfReader(uploaded_file[i])
+				
+		for i in range(len(reader.pages)):    
+			p = reader.pages[i]
+			t = p.extract_text()
+				
+			full_text = full_text + "\n" + t
+	
+	Transcript_final = full_text
+	
+	t_list = []
+	
+	words_per_segment = max_len
+	words = Transcript_final.split()
+	
+	for i in range(0, len(words), words_per_segment):
+		segment = " ".join(words[i:i + words_per_segment])
+		t_list.append(segment)
+
+	return t_list	
+			
 if file_type == 'pdf':
 	if uploaded_file is not None and len(uploaded_file)!=0:
-		for i in range(len(uploaded_file)):
-			reader = PyPDF2.PdfReader(uploaded_file[i])
-					
-			for i in range(len(reader.pages)):    
-				p = reader.pages[i]
-				t = p.extract_text()
-					
-				full_text = full_text + "\n" + t
 
-		Transcript_final = full_text
-
-		t_list = []
-
-		words_per_segment = max_len
-		words = Transcript_final.split()
-		
-		for i in range(0, len(words), words_per_segment):
-			segment = " ".join(words[i:i + words_per_segment])
-			t_list.append(segment)
+		t_list = pdf_processor(uploaded_file, max_len)
 
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
