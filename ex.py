@@ -20,7 +20,13 @@ model_option = st.selectbox(
     'Which model would you like to use?',
     ('gpt-4-1106-preview', 'gpt-3.5-turbo-1106'))
 
-uploaded_file = st.file_uploader("Choose a PDF file:", type=["pdf","mp3","m4a","wav"], accept_multiple_files=True)
+operation_option = st.selectbox(
+    'Which operation do you want to perform?',
+    ('General Note Making', 'Custom Topic Input'))
+
+user_prompt_input = st.text_input('Enter the comma seperated topics in 1 line (If you have chosen "custom topic input"):')
+
+uploaded_file = st.file_uploader("Choose a PDF/Audio file:", type=["pdf","mp3","m4a","wav"], accept_multiple_files=True)
 
 
 full_text = ''
@@ -103,6 +109,9 @@ def Note_maker(model_option, t_list, api_key):
 
 	st.write('Process done!','\n')
 	return Notes_Final
+
+#def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
+	
 
 def pdf_processor(uploaded_file, max_len, full_text):
 	for i in range(len(uploaded_file)):
