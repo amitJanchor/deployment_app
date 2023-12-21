@@ -104,7 +104,7 @@ def Note_maker(model_option, t_list, api_key):
 	st.write('Process done!','\n')
 	return Notes_Final
 
-def pdf_processor(uploaded_file, max_len):
+def pdf_processor(uploaded_file, max_len, full_text):
 	for i in range(len(uploaded_file)):
 		reader = PyPDF2.PdfReader(uploaded_file[i])
 				
@@ -130,7 +130,7 @@ def pdf_processor(uploaded_file, max_len):
 if file_type == 'pdf':
 	if uploaded_file is not None and len(uploaded_file)!=0:
 
-		t_list = pdf_processor(uploaded_file, max_len)
+		t_list = pdf_processor(uploaded_file, max_len, full_text)
 
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
