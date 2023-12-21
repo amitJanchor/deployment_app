@@ -110,8 +110,34 @@ def Note_maker(model_option, t_list, api_key):
 	st.write('Process done!','\n')
 	return Notes_Final
 
-#def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
+def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
+	client = OpenAI(api_key=api_key)
 	
+	Notes = []
+	
+	for i in range(len(t_list)):
+	    message_list = [
+	        {
+	          "role": "system",
+	          "content": "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
+	        },
+	        {
+	          "role": "user",
+	          "content": 'Notes: \n'+t_list[i]
+	        }
+	      ]
+	
+	    response = client.chat.completions.create(
+	      model=model_option,
+	      messages=message_list,
+	      temperature=1.5,
+	      max_tokens=4096,
+	      top_p=0.6,
+	      frequency_penalty=0,
+	      presence_penalty=0
+	    )
+	
+	    Notes.append(response.choices[0].message.content)
 
 def pdf_processor(uploaded_file, max_len, full_text):
 	for i in range(len(uploaded_file)):
