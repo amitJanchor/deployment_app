@@ -112,32 +112,53 @@ def Note_maker(model_option, t_list, api_key):
 
 def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
 	client = OpenAI(api_key=api_key)
-	
+	st.write('[Custom Input Note Making] Progress update:','\n')
 	Notes = []
 	
 	for i in range(len(t_list)):
-	    message_list = [
-	        {
-	          "role": "system",
-	          "content": "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
-	        },
-	        {
-	          "role": "user",
-	          "content": 'Notes: \n'+t_list[i]
-	        }
-	      ]
+		st.write(i+1,'/',len(t_list),'\n')
+		message_list = [
+		{
+		  "role": "system",
+		  "content": "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
+		},
+		{
+		  "role": "user",
+		  "content": 'Notes: \n'+t_list[i]
+		}
+		]
+		
+		response = client.chat.completions.create(
+		model=model_option,
+		messages=message_list,
+		temperature=1.5,
+		max_tokens=4096,
+		top_p=0.6,
+		frequency_penalty=0,
+		presence_penalty=0
+		)
+		
+		Notes.append(response.choices[0].message.content)
+
+	topics = [i.strip() for i in user_prompt_input.split(',')]
 	
-	    response = client.chat.completions.create(
-	      model=model_option,
-	      messages=message_list,
-	      temperature=1.5,
-	      max_tokens=4096,
-	      top_p=0.6,
-	      frequency_penalty=0,
-	      presence_penalty=0
-	    )
+	topics_names = [s.replace(' ', '_') for s in topics]
 	
-	    Notes.append(response.choices[0].message.content)
+	for j in range(len(topics)):
+		globals()[topics_names[j]+"_items"] = ''
+	
+	for i in range(len(Notes)):
+		ex = [i.strip() for i in Notes[i].strip().split('\n\n')]
+		if len(ex)>=len(topics):
+			for j in range(len(topics)):
+				globals()[topics_names[j]+"_items"] = globals()[topics_names[j]+"_items"] + ex[j]
+		    
+	Custom_notes = ''
+	
+	for j in range(len(topics)):
+		Custom_notes = Custom_notes + globals()[topics_names[j]+"_items"] + '\n\n'
+
+	return Custom_notes
 
 def pdf_processor(uploaded_file, max_len, full_text):
 	for i in range(len(uploaded_file)):
@@ -207,6 +228,7 @@ if file_type == 'pdf':
 
 		t_list, full_text = pdf_processor(uploaded_file, max_len, full_text)
 
+		
 		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
 
 		file_actual_name = file_title + '.txt'
