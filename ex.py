@@ -228,8 +228,10 @@ if file_type == 'pdf':
 
 		t_list, full_text = pdf_processor(uploaded_file, max_len, full_text)
 
-		
-		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+		if operation_option == "General Note Making":
+			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+		elif operation_option == "Custom Topic Input":
+			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)
@@ -242,7 +244,10 @@ if file_type == 'audio':
 
 		t_list, string_transcript_audio = audio_processor(uploaded_file[0], max_len, string_transcript_audio)
 
-		Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+		if operation_option == "General Note Making":
+			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+		elif operation_option == "Custom Topic Input":
+			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name)	
