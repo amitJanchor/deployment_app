@@ -26,6 +26,13 @@ operation_option = st.selectbox(
 
 user_prompt_input = st.text_input('Enter the comma seperated topics in 1 line (If you have chosen "custom topic input"):')
 
+
+#prompt_area = st.text_area("", value= )
+
+prompt_option = st.selectbox(
+    'Do you want to use the customized prompt ?',
+    ('Use default prompt', 'Use customized prompt'))
+
 uploaded_file = st.file_uploader("Choose a PDF/Audio file:", type=["pdf","mp3","m4a","wav"], accept_multiple_files=True)
 
 
