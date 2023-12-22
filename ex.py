@@ -27,6 +27,7 @@ operation_option = st.selectbox(
 user_prompt_input = st.text_input('Enter the comma seperated topics in 1 line (If you have chosen "custom topic input"):')
 
 prompt_area_default_text=''
+prompt_area_text=''
 if operation_option:
 	if user_prompt_input:
 		if operation_option=='General Note Making':
@@ -46,14 +47,20 @@ uploaded_file = st.file_uploader("Choose a PDF/Audio file:", type=["pdf","mp3","
 full_text = ''
 
 
-def Note_maker(model_option, t_list, api_key):
+def Note_maker(model_option, t_list, api_key, prompt_option, prompt_area_text):
 	client = openai.OpenAI(api_key=api_key)
 	st.write('[Note Making] Progress update:','\n')
 	st.write(1,'/',len(t_list),'\n')
+	
+	if prompt_option=="Use default prompt":
+		actual_prompt = "Generate detailed call notes of the conversation for an investment firm.\nGenerate notes pointwise under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+	elif prompt_option=="Use customized prompt":
+		actual_prompt = prompt_area_text
+	
 	message_list = [
 	    {
 	      "role": "system",
-	      "content": "Generate detailed call notes of the conversation for an investment firm.\nGenerate notes pointwise under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+	      "content": actual_prompt
 	    },
 	    {
 	      "role": "user",
@@ -124,17 +131,23 @@ def Note_maker(model_option, t_list, api_key):
 	st.write('Process done!','\n')
 	return Notes_Final
 
-def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
+def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input, prompt_option, prompt_area_text):
 	client = openai.OpenAI(api_key=api_key)
 	st.write('[Custom Input Note Making] Progress update:','\n')
 	Notes = []
 	
 	for i in range(len(t_list)):
 		st.write(i+1,'/',len(t_list),'\n')
+
+		if prompt_option=="Use default prompt":
+			actual_prompt = "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
+		elif prompt_option=="Use customized prompt":
+			actual_prompt = prompt_area_text
+		
 		message_list = [
 		{
 		  "role": "system",
-		  "content": "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
+		  "content": actual_prompt
 		},
 		{
 		  "role": "user",
@@ -246,9 +259,9 @@ if file_type == 'pdf':
 		st.download_button('Download Transcript', full_text, file_name=file_transcript_actual_name)
 		
 		if operation_option == "General Note Making":
-			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
 		elif operation_option == "Custom Topic Input":
-			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input)
+			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")
@@ -265,9 +278,9 @@ if file_type == 'audio':
 		st.download_button('Download Transcript', string_transcript_audio, file_name=file_transcript_actual_name)
 
 		if operation_option == "General Note Making":
-			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"])
+			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
 		elif operation_option == "Custom Topic Input":
-			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input)
+			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")	
