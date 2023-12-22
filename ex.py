@@ -26,8 +26,14 @@ operation_option = st.selectbox(
 
 user_prompt_input = st.text_input('Enter the comma seperated topics in 1 line (If you have chosen "custom topic input"):')
 
+if operation_option:
+	if user_prompt_input:
+		if operation_option=='General Note Making':
+			prompt_area_default_text = "Generate detailed call notes of the conversation for an investment firm.\nGenerate notes pointwise under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+		elif operation_option=='Custom Topic Input':
+			prompt_area_default_text = "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
 
-#prompt_area = st.text_area("", value= )
+prompt_area_text = st.text_area("This is the default prompt. If you modify the prompt, please choose 'Use customized prompt' in the next question", value=prompt_area_default_text)
 
 prompt_option = st.selectbox(
     'Do you want to use the customized prompt ?',
