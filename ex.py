@@ -129,7 +129,7 @@ def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input):
 		]
 		
 		response = client.chat.completions.create(
-		model=model_option,
+		model='gpt-4-1106-preview',
 		messages=message_list,
 		temperature=1.5,
 		max_tokens=4096,
