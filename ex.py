@@ -26,6 +26,7 @@ operation_option = st.selectbox(
 
 user_prompt_input = st.text_input('Enter the comma seperated topics in 1 line (If you have chosen "custom topic input"):')
 
+prompt_area_default_text=''
 if operation_option:
 	if user_prompt_input:
 		if operation_option=='General Note Making':
