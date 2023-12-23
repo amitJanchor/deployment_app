@@ -4,21 +4,12 @@ from io import BytesIO
 import openai
 import pydub
 
-background_color = """
-<style>
-body {
-    background-color: #00ccff; /* Use your desired color code */
-}
-</style>
-"""
-
-st.markdown(background_color, unsafe_allow_html=True)
-
 st.markdown('# Hello User!')
 
-file_type = st.selectbox(
-    'Choose source type [ pdf , audio ]:',
-    ('pdf', 'audio'))
+with st.expander("open up"):
+	file_type = st.selectbox(
+	    'Choose source type [ pdf , audio ]:',
+	    ('pdf', 'audio'))
 
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
