@@ -10,7 +10,7 @@ file_type = st.selectbox(
     'Choose source type [ pdf , audio ]:',
     ('pdf', 'audio'))
 
-with st.expander("# Whisper/Audiogest Settings"):
+with st.expander(st.markdown('# Whisper/Audiogest Settings')):
 	st.write("Hello")
 
 max_len_str = st.text_input('Chunk size:')
