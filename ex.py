@@ -6,10 +6,12 @@ import pydub
 
 st.markdown('# Hello User!')
 
-with st.expander("open up"):
-	file_type = st.selectbox(
-	    'Choose source type [ pdf , audio ]:',
-	    ('pdf', 'audio'))
+file_type = st.selectbox(
+    'Choose source type [ pdf , audio ]:',
+    ('pdf', 'audio'))
+
+with st.expander("### Whisper/Audiogest Settings"):
+	st.write("Hello")
 
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
