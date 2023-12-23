@@ -4,6 +4,16 @@ from io import BytesIO
 import openai
 import pydub
 
+background_color = """
+<style>
+body {
+    background-color: #00ccff; /* Use your desired color code */
+}
+</style>
+"""
+
+st.markdown(background_color, unsafe_allow_html=True)
+
 st.markdown('# Hello User!')
 
 file_type = st.selectbox(
