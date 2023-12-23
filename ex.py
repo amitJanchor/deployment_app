@@ -4,7 +4,7 @@ from io import BytesIO
 import openai
 import pydub
 
-st.latex('Hello User!')
+st.latex(r'\raggedright Hello User!')
 
 file_type = st.selectbox(
     'Choose source type [ pdf , audio ]:',
