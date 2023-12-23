@@ -4,7 +4,7 @@ from io import BytesIO
 import openai
 import pydub
 
-st.markdown('# Hello User !')
+st.markdown('# Hello User!')
 
 file_type = st.selectbox(
     'Choose source type [ pdf , audio ]:',
