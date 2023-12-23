@@ -10,8 +10,22 @@ file_type = st.selectbox(
     'Choose source type [ pdf , audio ]:',
     ('pdf', 'audio'))
 
-with st.expander(st.markdown('# Whisper/Audiogest Settings')):
-	st.write("Hello")
+with st.expander('Whisper/Audiogest Settings', expanded=True):
+	language_input = st.text_input('Enter the language of the audio in ISO-639-1 format {english = en, hindi = hi}:', value='en')
+	prompt_input = st.text_area('Enter your custom prompt which may contain factual words present in the audio:')
+	temperature_input = st.number_input("Insert a number", value=0, placeholder="Type a number between [0,1]...")
+
+language_input_value='en'
+if language_input:
+	language_input_value = language_input
+
+prompt_input_value=''
+if prompt_input:
+	prompt_input_value = prompt_input
+
+temperature_input_value=0
+if temperature_input:
+	temperature_input_value = temperature_input
 
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
