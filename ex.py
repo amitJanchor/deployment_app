@@ -292,7 +292,7 @@ string_transcript_audio=''
 if file_type == 'audio':
 	if uploaded_file is not None and len(uploaded_file)!=0:
 
-		t_list, string_transcript_audio = audio_processor(uploaded_file[0], max_len, string_transcript_audio)
+		t_list, string_transcript_audio = audio_processor(uploaded_file[0], max_len, string_transcript_audio, language_input_value, prompt_input_value, temperature_input_value)
 
 		file_transcript_actual_name = file_title + '_transcript.txt'
 		st.download_button('Download Transcript', string_transcript_audio, file_name=file_transcript_actual_name)
