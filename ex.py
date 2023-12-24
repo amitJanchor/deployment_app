@@ -13,7 +13,7 @@ file_type = st.selectbox(
 with st.expander('Whisper/Audiogest Settings', expanded=True):
 	language_input = st.text_input('Enter the language of the audio in "ISO-639-1" format {english = en, hindi = hi}:', value='en')
 	prompt_input = st.text_area('Enter your custom prompt which may contain factual words present in the audio:')
-	temperature_input = st.number_input("Insert a number", value=0.0, placeholder="Type a number between [0,1]...")
+	temperature_input = st.number_input("Insert a number", value=0.0, placeholder="Enter a number between [0,1]...")
 
 language_input_value='en'
 if language_input:
