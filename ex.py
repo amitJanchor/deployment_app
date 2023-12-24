@@ -18,6 +18,7 @@ with st.expander('Whisper/Audiogest Settings', expanded=True):
 	prompt_input = st.text_area('Enter your custom prompt which may contain factual words present in the audio:')
 	temperature_input = st.number_input("Enter a number between [0,1]:", value=0.0)
 	num_speakers_input = st.number_input("Enter the number of speakers including the interviewer(for audiogest):", value=2)
+	wait_time_input = st.number_input("Enter the time(in minutes) to wait for audiogest transcription:", value=10)	
 
 language_input_value='en'
 if language_input:
@@ -34,6 +35,10 @@ if temperature_input:
 num_speakers_input_value=2
 if num_speakers_input:
 	num_speakers_input_value = num_speakers_input
+
+wait_time_input_value=10
+if wait_time_input:
+	wait_time_input_value = wait_time_input
 
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
