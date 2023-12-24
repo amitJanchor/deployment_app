@@ -13,7 +13,7 @@ file_type = st.selectbox(
 with st.expander('Whisper/Audiogest Settings', expanded=True):
 	language_input = st.text_input('Enter the language of the audio in "ISO-639-1" format {english = en, hindi = hi}:', value='en')
 	prompt_input = st.text_area('Enter your custom prompt which may contain factual words present in the audio:')
-	temperature_input = st.number_input("Insert a number", value=0.0, placeholder="Enter a number between [0,1]...")
+	temperature_input = st.number_input("Enter a number between [0,1]", value=0.0, placeholder="Enter a number between [0,1] here...")
 
 language_input_value='en'
 if language_input:
@@ -227,7 +227,7 @@ def pdf_processor(uploaded_file, max_len, full_text):
 
 	return t_list, full_text	
 
-def audio_processor(uploaded_file, max_len, string_transcript_audio):
+def audio_processor(uploaded_file, max_len, string_transcript_audio, language_input_value, prompt_input_value, temperature_input_value):
 	audio = pydub.AudioSegment.from_file(uploaded_file)
 	total_duration = len(audio)
 	chunk_length_ms = 60000
@@ -250,7 +250,10 @@ def audio_processor(uploaded_file, max_len, string_transcript_audio):
 			transcript = client.audio.transcriptions.create(
 					  model="whisper-1", 
 					  file=audio_file, 
-					  response_format="text"
+					  response_format="text",
+					  language=language_input_value,
+					  prompt=prompt_input_value,
+					  temperature=temperature_input_value
 					)
 			string_transcript_audio = string_transcript_audio + transcript + ' '
 	st.write('Transcription Done!','\n')
