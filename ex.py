@@ -9,13 +9,14 @@ import json
 st.markdown('# Hello User!')
 
 file_type = st.selectbox(
-    'Choose source type [ pdf , audio ]:',
-    ('pdf', 'audio'))
+    'Choose source type [pdf, audio, audiogest-link]:',
+    ('pdf', 'audio', 'gdrive link(public access)'))
 
 with st.expander('Whisper/Audiogest Settings', expanded=True):
 	language_input = st.text_input('Enter the language of the audio in "ISO-639-1" format {english = en, hindi = hi}:', value='en')
 	prompt_input = st.text_area('Enter your custom prompt which may contain factual words present in the audio:')
-	temperature_input = st.number_input("Enter a number between [0,1]", value=0.0, placeholder="Enter a number between [0,1] here...")
+	temperature_input = st.number_input("Enter a number between [0,1]:", value=0.0)
+	num_speakers_input = st.number_input("Enter the number of speakers including the interviewer(for audiogest):", value=2)
 
 language_input_value='en'
 if language_input:
@@ -28,6 +29,10 @@ if prompt_input:
 temperature_input_value=0
 if temperature_input:
 	temperature_input_value = temperature_input
+
+num_speakers_input_value=2
+if num_speakers_input:
+	num_speakers_input_value = num_speakers_input
 
 max_len_str = st.text_input('Chunk size:')
 if max_len_str:
