@@ -3,6 +3,8 @@ import PyPDF2
 from io import BytesIO
 import openai
 import pydub
+import requests
+import json
 
 st.markdown('# Hello User!')
 
