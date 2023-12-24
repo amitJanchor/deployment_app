@@ -35,7 +35,7 @@ file_title = st.text_input('File title:')
 
 model_option = st.selectbox(
     'Which model would you like to use?',
-    ('gpt-4-1106-preview', 'gpt-4-32k-0613', 'gpt-3.5-turbo-1106'))
+    ('gpt-4-1106-preview', 'gpt-4', 'gpt-3.5-turbo-1106'))
 
 operation_option = st.selectbox(
     'Which operation do you want to perform?',
@@ -103,7 +103,7 @@ def Note_maker(model_option, t_list, api_key, prompt_option, prompt_area_text):
 		
 		Notes.append(response.choices[0].message.content)
 
-		if (model_option=='gpt-3.5-turbo-1106') or (model_option=='gpt-4-32k-0613'):
+		if (model_option=='gpt-3.5-turbo-1106') or (model_option=='gpt-4'):
 			try:
 				del message_list[2:4]
 			except:
