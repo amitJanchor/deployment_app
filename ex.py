@@ -7,6 +7,11 @@ import requests
 import json
 import re
 
+st.set_page_config(
+    page_title="My App",
+    page_icon=":shark:",
+)
+
 st.markdown('# Hello User!')
 
 file_type = st.selectbox(
