@@ -215,6 +215,148 @@ def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input, prompt_o
 
 	return Custom_notes
 
+def Multi_Note_maker(uploaded_file, model_option, t_list, api_key, prompt_option, prompt_area_text):
+	client = openai.OpenAI(api_key=api_key)
+	for j in range(len(t_list)):
+		st.write(f'[Note Making {j}] Progress update:','\n')
+		st.write(1,'/',len(t_list[j]),'\n')
+		
+		if prompt_option=="Use default prompt":
+			actual_prompt = "Generate detailed call notes of the conversation for an investment firm.\nGenerate notes pointwise under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+		elif prompt_option=="Use customized prompt":
+			actual_prompt = prompt_area_text
+		
+		message_list = [
+			{
+			"role": "system",
+			"content": actual_prompt
+			},
+			{
+			"role": "user",
+			"content": t_list[j][0]
+			}
+		]
+		
+		response = client.chat.completions.create(
+		model=model_option,
+		messages=message_list,
+		temperature=1.5,
+		max_tokens=4096,
+		top_p=0.6,
+		frequency_penalty=0,
+		presence_penalty=0
+		)
+		
+		Notes = []
+		
+		for i in range(1,len(t_list[j])):
+			
+			st.write(i+1,'/',len(t_list[j]),'\n')
+			
+			Notes.append(response.choices[0].message.content)
+
+			if (model_option=='gpt-3.5-turbo-1106') or (model_option=='gpt-4'):
+				try:
+					del message_list[2:4]
+				except:
+					pass
+			elif (model_option=='gpt-4-1106-preview'):
+				try:
+					if len(message_list)>=8:
+						del message_list[2:4]
+				except:
+					pass
+			
+			message_list.append({
+				"role": "assistant",
+				"content": response.choices[0].message.content
+				})
+			
+			stock = "This is continuation of the transcript.\nGenerate call notes pointwise for an investment firm under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
+			cont = stock + t_list[j][i]
+			
+			message_list.append({
+				"role": "user",
+				"content": cont
+				})
+			
+			response = client.chat.completions.create(
+				model=model_option,
+				messages=message_list,
+				temperature=1.5,
+				max_tokens=4096,
+				top_p=0.6,
+				frequency_penalty=0,
+				presence_penalty=0
+				)
+			
+		Notes.append(response.choices[0].message.content)
+
+		Notes_Final = ''
+
+		for i in Notes:
+			Notes_Final = Notes_Final + i + '\n\n'
+
+		
+	st.write('Process done!','\n')
+	return Notes_Final_Final
+
+def Multi_Custom_Note_maker(uploaded_file, model_option, t_list, api_key, user_prompt_input, prompt_option, prompt_area_text):
+	client = openai.OpenAI(api_key=api_key)
+	st.write('[Custom Input Note Making] Progress update:','\n')
+	Notes = []
+	
+	for i in range(len(t_list)):
+		st.write(i+1,'/',len(t_list),'\n')
+
+		if prompt_option=="Use default prompt":
+			actual_prompt = "Generate detailed call notes of the conversation for an investment firm only under these topics-{"+user_prompt_input+"}.\nGenerate notes pointwise under only those topics, (Convert all text numbers to numbers)"
+		elif prompt_option=="Use customized prompt":
+			actual_prompt = prompt_area_text
+		
+		message_list = [
+		{
+		  "role": "system",
+		  "content": actual_prompt
+		},
+		{
+		  "role": "user",
+		  "content": 'Notes: \n'+t_list[i]
+		}
+		]
+		
+		response = client.chat.completions.create(
+		model='gpt-4-1106-preview',
+		messages=message_list,
+		temperature=1.5,
+		max_tokens=4096,
+		top_p=0.6,
+		frequency_penalty=0,
+		presence_penalty=0
+		)
+		
+		Notes.append(response.choices[0].message.content)
+
+	topics = [i.strip() for i in user_prompt_input.split(',')]
+	
+	topics_names = [s.replace(' ', '_') for s in topics]
+	
+	for j in range(len(topics)):
+		globals()[topics_names[j]+"_items"] = ''
+	
+	for i in range(len(Notes)):
+		ex = [i.strip() for i in Notes[i].strip().split('\n\n')]
+		if len(ex)>=len(topics):
+			for j in range(len(topics)):
+				globals()[topics_names[j]+"_items"] = globals()[topics_names[j]+"_items"] + ex[j]
+		    
+	Custom_notes = ''
+	
+	for j in range(len(topics)):
+		Custom_notes = Custom_notes + globals()[topics_names[j]+"_items"] + '\n\n'
+
+	return Custom_notes
+
 def pdf_processor(uploaded_file, max_len):
 	full_text = [""] * len(uploaded_file)
 	
@@ -293,6 +435,19 @@ if file_type == 'pdf':
 			Notes_final_ans = Note_maker(model_option, t_list[0], st.secrets["openai_key"], prompt_option, prompt_area_text)
 		elif operation_option == "Custom Topic Input":
 			Notes_final_ans = Custom_Note_maker(model_option, t_list[0], st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
+
+		file_actual_name = file_title + '.txt'
+		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")
+		st.stop()
+
+	if uploaded_file is not None and len(uploaded_file)>1:
+
+		t_list, full_text = pdf_processor(uploaded_file, max_len)
+		
+		if operation_option == "General Note Making":
+			Notes_final_ans = Multi_Note_maker(uploaded_file, model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
+		elif operation_option == "Custom Topic Input":
+			Notes_final_ans = Multi_Custom_Note_maker(uploaded_file, model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")
