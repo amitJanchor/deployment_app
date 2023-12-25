@@ -222,6 +222,7 @@ def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input, prompt_o
 
 def Multi_Note_maker(uploaded_file, model_option, t_list, api_key, prompt_option, prompt_area_text):
 	client = openai.OpenAI(api_key=api_key)
+	Notes_Final_Final = ''
 	for j in range(len(t_list)):
 		st.write(f'[Note Making {j}] Progress update:','\n')
 		st.write(1,'/',len(t_list[j]),'\n')
@@ -302,6 +303,7 @@ def Multi_Note_maker(uploaded_file, model_option, t_list, api_key, prompt_option
 		for i in Notes:
 			Notes_Final = Notes_Final + i + '\n\n'
 
+		Notes_Final_Final = Notes_Final_Final + uploaded_file[j].name + ' :\n' + Notes_Final + '\n\n\n'
 		
 	st.write('Process done!','\n')
 	return Notes_Final_Final
