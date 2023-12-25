@@ -365,7 +365,7 @@ def Multi_Custom_Note_maker(uploaded_file, model_option, t_list, api_key, user_p
 	return Custom_notes
 
 def pdf_processor(uploaded_file, max_len):
-	full_text = [""] * len(uploaded_file)
+	full_text = ["" for k in range(len(uploaded_file))]
 	
 	for i in range(len(uploaded_file)):
 		reader = PyPDF2.PdfReader(uploaded_file[i])
@@ -378,7 +378,7 @@ def pdf_processor(uploaded_file, max_len):
 	
 	Transcript_final = full_text
 	
-	t_list = [[]] * len(Transcript_final)
+	t_list = [[] for k in range(len(Transcript_final))]
 	
 	words_per_segment = max_len
 	for j in range(len(Transcript_final)):
