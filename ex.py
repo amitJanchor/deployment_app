@@ -8,8 +8,8 @@ import json
 import re
 
 st.set_page_config(
-    page_title="My App",
-    page_icon=":shark:",
+    page_title="NoteMaker",
+    page_icon=":bookmark_tabs:",
 )
 
 st.markdown('# Hello User!')
