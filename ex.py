@@ -74,7 +74,7 @@ prompt_option = st.selectbox(
 uploaded_file = st.file_uploader("Choose a PDF/Audio file:", type=["pdf","mp3","m4a","wav"], accept_multiple_files=True)
 
 
-full_text = ''
+full_text = []
 
 
 def Note_maker(model_option, t_list, api_key, prompt_option, prompt_area_text):
@@ -219,26 +219,31 @@ def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input, prompt_o
 
 def pdf_processor(uploaded_file, max_len, full_text):
 	for i in range(len(uploaded_file)):
+		full_text[i] = ''
+	
+	for i in range(len(uploaded_file)):
 		reader = PyPDF2.PdfReader(uploaded_file[i])
 				
-		for i in range(len(reader.pages)):    
-			p = reader.pages[i]
+		for j in range(len(reader.pages)):    
+			p = reader.pages[j]
 			t = p.extract_text()
 				
-			full_text = full_text + "\n" + t
+			full_text[i] = full_text[i] + "\n" + t
 	
 	Transcript_final = full_text
 	
-	t_list = []
+	for j in range(len(Transcript_final)):
+		t_list[j] = []
 	
 	words_per_segment = max_len
-	words = Transcript_final.split()
-	
-	for i in range(0, len(words), words_per_segment):
-		segment = " ".join(words[i:i + words_per_segment])
-		t_list.append(segment)
+	for j in range(len(Transcript_final)):
+		words = Transcript_final[j].split()
+		
+		for i in range(0, len(words), words_per_segment):
+			segment = " ".join(words[i:i + words_per_segment])
+			t_list[j].append(segment)
 
-	return t_list, full_text	
+	return t_list, full_text
 
 def audio_processor_whisper(uploaded_file, max_len, string_transcript_audio, language_input_value, prompt_input_value, temperature_input_value):
 	audio = pydub.AudioSegment.from_file(uploaded_file)
@@ -284,17 +289,14 @@ def audio_processor_whisper(uploaded_file, max_len, string_transcript_audio, lan
 	return t_list, string_transcript_audio
 
 if file_type == 'pdf':
-	if uploaded_file is not None and len(uploaded_file)!=0:
+	if uploaded_file is not None and len(uploaded_file)==1:
 
 		t_list, full_text = pdf_processor(uploaded_file, max_len, full_text)
 		
-		file_transcript_actual_name = file_title + '_transcript.txt'
-		st.download_button('Download Transcript', full_text, file_name=file_transcript_actual_name)
-		
 		if operation_option == "General Note Making":
-			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
+			Notes_final_ans = Note_maker(model_option, t_list[0], st.secrets["openai_key"], prompt_option, prompt_area_text)
 		elif operation_option == "Custom Topic Input":
-			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
+			Notes_final_ans = Custom_Note_maker(model_option, t_list[0], st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")
