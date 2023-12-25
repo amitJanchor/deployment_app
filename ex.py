@@ -74,8 +74,6 @@ prompt_option = st.selectbox(
 uploaded_file = st.file_uploader("Choose a PDF/Audio file:", type=["pdf","mp3","m4a","wav"], accept_multiple_files=True)
 
 
-full_text = []
-
 
 def Note_maker(model_option, t_list, api_key, prompt_option, prompt_area_text):
 	client = openai.OpenAI(api_key=api_key)
@@ -217,9 +215,8 @@ def Custom_Note_maker(model_option, t_list, api_key, user_prompt_input, prompt_o
 
 	return Custom_notes
 
-def pdf_processor(uploaded_file, max_len, full_text):
-	for i in range(len(uploaded_file)):
-		full_text[i] = ''
+def pdf_processor(uploaded_file, max_len):
+	full_text = [""] * len(uploaded_file)
 	
 	for i in range(len(uploaded_file)):
 		reader = PyPDF2.PdfReader(uploaded_file[i])
@@ -232,8 +229,7 @@ def pdf_processor(uploaded_file, max_len, full_text):
 	
 	Transcript_final = full_text
 	
-	for j in range(len(Transcript_final)):
-		t_list[j] = []
+	t_list = [[]] * len(Transcript_final)
 	
 	words_per_segment = max_len
 	for j in range(len(Transcript_final)):
@@ -291,7 +287,7 @@ def audio_processor_whisper(uploaded_file, max_len, string_transcript_audio, lan
 if file_type == 'pdf':
 	if uploaded_file is not None and len(uploaded_file)==1:
 
-		t_list, full_text = pdf_processor(uploaded_file, max_len, full_text)
+		t_list, full_text = pdf_processor(uploaded_file, max_len)
 		
 		if operation_option == "General Note Making":
 			Notes_final_ans = Note_maker(model_option, t_list[0], st.secrets["openai_key"], prompt_option, prompt_area_text)
