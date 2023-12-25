@@ -224,7 +224,7 @@ def Multi_Note_maker(uploaded_file, model_option, t_list, api_key, prompt_option
 	client = openai.OpenAI(api_key=api_key)
 	Notes_Final_Final = ''
 	for j in range(len(t_list)):
-		st.write(f'[Note Making {j}] Progress update:','\n')
+		st.write(f'[Note Making {j+1}] Progress update:','\n')
 		st.write(1,'/',len(t_list[j]),'\n')
 		
 		if prompt_option=="Use default prompt":
