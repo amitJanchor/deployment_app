@@ -27,7 +27,7 @@ if link_input:
 with st.expander('Whisper/Audiogest Settings', expanded=True):
 	language_input = st.text_input('Enter the language of the audio in "ISO-639-1" format {english = en, hindi = hi}:', value='en')
 	prompt_input = st.text_area('Enter your custom prompt which may contain factual words present in the audio:')
-	temperature_input = st.number_input("Enter a number between [0,1]:", value=0.0)
+	temperature_input = st.number_input("Enter a number between [0,1] for temperature value:", value=0.0)
 	num_speakers_input = st.number_input("Enter the number of speakers including the interviewer(for audiogest):", value=2)
 	wait_time_input = st.number_input("Enter the time(in minutes) to wait for audiogest transcription:", value=10)	
 
@@ -469,7 +469,7 @@ def audio_processor_audiogest(link_input_value, max_len, string_transcript_audio
 		st.write('Audiogest error','\n')
 
 	#wait time
-	progress_text = "Transcription in progress. Please wait."
+	progress_text = f"Transcription in progress. Please wait for {wait_time_input_value} minutes."
 	my_bar = st.progress(0, text=progress_text)
 
 	for percent_complete in range(100):
@@ -485,7 +485,7 @@ def audio_processor_audiogest(link_input_value, max_len, string_transcript_audio
 
 	headers = {
 		"Content-type": "application/json",
-		"Authorization": f"Bearer {api_key}",
+		"Authorization": f"Bearer {audiogest_key}",
 	}
 
 	try:
