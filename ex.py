@@ -5,6 +5,7 @@ import openai
 import pydub
 import requests
 import json
+import time
 import re
 
 st.set_page_config(
@@ -17,6 +18,11 @@ st.markdown('# Hello User!')
 file_type = st.selectbox(
     'Choose source type [pdf, audio, audiogest-link]:',
     ('pdf', 'audio', 'gdrive link(public access)'))
+
+link_input = st.text_input('Enter the google drive public access link of the file here(if you have chosen "gdrive link(public access)" in the previous question):')
+link_input_value = ''
+if link_input:
+	link_input_value = link_input
 
 with st.expander('Whisper/Audiogest Settings', expanded=True):
 	language_input = st.text_input('Enter the language of the audio in "ISO-639-1" format {english = en, hindi = hi}:', value='en')
@@ -416,6 +422,100 @@ def audio_processor_whisper(uploaded_file, max_len, string_transcript_audio, lan
 
 	return t_list, string_transcript_audio
 
+def convert_extract_file_id(gdrive_link):
+    match = re.search(r"/d/(\S+?)/", gdrive_link)
+    if match:
+        file_id = match.group(1)
+    else:
+        pass
+
+    download_link = f"https://drive.google.com/uc?export=download&id={file_id}"
+    
+    return download_link
+
+def audio_processor_audiogest(link_input_value, max_len, string_transcript_audio, language_input_value, prompt_input_value, num_speakers_input_value, wait_time_input_value):
+	audiogest_key = st.secrets["audiogest_key"]
+
+	transcribe_endpoint = "https://audiogest.app/api/transcripts"
+
+	headers = {
+		"Content-type": "application/json",
+		"Authorization": f"Bearer {audiogest_key}",
+		
+	}
+
+	link_transcribe = convert_extract_file_id(link_input_value)
+
+	body = {
+		"url": link_transcribe,
+		"name": "file.mp3", 
+		"numSpeakers": num_speakers_input_value,
+		"language": language_input_value,
+		"vocabulary": prompt_input_value
+	}
+
+
+	try:
+		response = requests.post(transcribe_endpoint, headers=headers, data=json.dumps(body))
+
+		if response.status_code == 200:
+			data = response.json()
+			Transcript_ID = data.get("transcriptId", "Not available")
+			st.write('Audiogest transcribing process started','\n')
+		else:
+			st.write('Audiogest error','\n')
+
+	except requests.RequestException as e:
+		st.write('Audiogest error','\n')
+
+	#wait time
+	progress_text = "Transcription in progress. Please wait."
+	my_bar = st.progress(0, text=progress_text)
+
+	for percent_complete in range(100):
+		time.sleep((wait_time_input_value*60)/100)
+		my_bar.progress(percent_complete + 1, text=progress_text)
+	time.sleep(1)
+	my_bar.empty()
+
+	#retrieval
+	transcriptId = Transcript_ID
+
+	transcript_endpoint = f"https://audiogest.app/api/transcripts/{transcriptId}"
+
+	headers = {
+		"Content-type": "application/json",
+		"Authorization": f"Bearer {api_key}",
+	}
+
+	try:
+		response = requests.get(transcript_endpoint, headers=headers)
+
+		if response.status_code == 200:
+			transcript_data = response.json()
+			st.write('Transcription process done!','\n')
+		else:
+			st.write('Audiogest error','\n')
+
+	except requests.RequestException as e:
+		st.write('Audiogest error','\n')
+
+	for i in range(len(transcript_data['segments'])):
+		string_transcript_audio = string_transcript_audio + '<'+ transcript_data['segments'][i]['speaker'] +'>' + ': \n' + transcript_data['segments'][i]['text'] + "\n\n"
+
+	Transcript_final = string_transcript_audio
+	
+	t_list = []
+	
+	words_per_segment = max_len
+	words = Transcript_final.split()
+	
+	for i in range(0, len(words), words_per_segment):
+		segment = " ".join(words[i:i + words_per_segment])
+		t_list.append(segment)
+
+	return t_list, string_transcript_audio
+
 if file_type == 'pdf':
 	if uploaded_file is not None and len(uploaded_file)==1:
 
@@ -449,6 +549,22 @@ if file_type == 'audio':
 	if uploaded_file is not None and len(uploaded_file)!=0:
 
 		t_list, string_transcript_audio = audio_processor_whisper(uploaded_file[0], max_len, string_transcript_audio, language_input_value, prompt_input_value, temperature_input_value)
+
+		file_transcript_actual_name = file_title + '_transcript.txt'
+		st.download_button('Download Transcript', string_transcript_audio, file_name=file_transcript_actual_name)
+
+		if operation_option == "General Note Making":
+			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
+		elif operation_option == "Custom Topic Input":
+			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
+
+		file_actual_name = file_title + '.txt'
+		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")	
+		st.stop()
+
+if file_type == 'gdrive link(public access)':
+	if link_input:
+		t_list, string_transcript_audio = audio_processor_audiogest(link_input_value, max_len, string_transcript_audio, language_input_value, prompt_input_value, num_speakers_input_value, wait_time_input_value)
 
 		file_transcript_actual_name = file_title + '_transcript.txt'
 		st.download_button('Download Transcript', string_transcript_audio, file_name=file_transcript_actual_name)
