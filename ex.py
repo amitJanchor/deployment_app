@@ -556,7 +556,7 @@ if file_type == 'audio':
 		if operation_option == "General Note Making":
 			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
 		elif operation_option == "Custom Topic Input":
-			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
+			Notes_final_ans = Multi_Custom_Note_maker(uploaded_file, model_option, [string_transcript_audio], st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")	
@@ -572,7 +572,7 @@ if file_type == 'gdrive link(public access)':
 		if operation_option == "General Note Making":
 			Notes_final_ans = Note_maker(model_option, t_list, st.secrets["openai_key"], prompt_option, prompt_area_text)
 		elif operation_option == "Custom Topic Input":
-			Notes_final_ans = Custom_Note_maker(model_option, t_list, st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
+			Notes_final_ans = Multi_Custom_Note_maker(uploaded_file, model_option, [string_transcript_audio], st.secrets["openai_key"], user_prompt_input, prompt_option, prompt_area_text)
 
 		file_actual_name = file_title + '.txt'
 		st.download_button('Download Call Notes', Notes_final_ans, file_name=file_actual_name, type="primary")	
