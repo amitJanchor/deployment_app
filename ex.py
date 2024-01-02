@@ -65,6 +65,8 @@ operation_option = st.selectbox(
     'Which operation do you want to perform?',
     ('General Note Making', 'Custom Topic Input'))
 
+topic_input_file = st.file_uploader("Choose a PDF file containing the topics arranged properly:", type=["pdf"], accept_multiple_files=False)
+
 user_prompt_input = st.text_input('Enter the comma seperated topics in 1 line (If you have chosen "custom topic input"):')
 
 prompt_area_default_text="Generate detailed call notes of the conversation for an investment firm.\nGenerate notes pointwise under each of all the Important Sections, (Convert all text numbers to numbers, Include all important information and numbers.)\n"
